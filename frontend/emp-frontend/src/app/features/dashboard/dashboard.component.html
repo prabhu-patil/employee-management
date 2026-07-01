@@ -1,0 +1,132 @@
+<main class="dashboard-page">
+  <!-- KPI ROW -->
+  <section class="kpi-row">
+    <article *ngFor="let kpi of kpis()" class="panel kpi-card">
+      <div class="kpi-head">
+        <span class="kpi-label">{{ kpi.label }}</span>
+        <span class="kpi-delta" [class.up]="kpi.deltaPositive" [class.down]="!kpi.deltaPositive">
+          {{ kpi.delta }}
+        </span>
+      </div>
+      <strong class="kpi-value">{{ kpi.value }}</strong>
+      <div class="kpi-spark" echarts [options]="kpi.spark" [autoResize]="true"></div>
+    </article>
+  </section>
+
+  <!-- EMPLOYEE SUMMARY (combined card matching screenshot) -->
+  <article class="panel employee-summary-card">
+    <header class="panel-header">
+      <h2>Employee Summary</h2>
+      <button type="button" class="more-btn" aria-label="Card menu">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
+      </button>
+    </header>
+
+    <div class="summary-top">
+      <ul class="summary-tiles">
+        <li *ngFor="let s of summary()">
+          <span class="tile-icon" [style.background]="s.iconBg" [style.color]="s.iconColor"
+                [innerHTML]="getSummaryIcon(s.icon)"></span>
+          <div class="tile-text">
+            <strong>{{ s.value }}</strong>
+            <span>{{ s.label }}</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="pie-block">
+        <h3 class="pie-title">Department Distribution</h3>
+        <div class="pie-area" echarts [options]="pieChart()" [autoResize]="true"></div>
+        <ul class="pie-legend">
+          <li *ngFor="let d of deptCards()">
+            <span class="dot" [style.background]="d.color"></span>{{ d.name }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <ul class="dept-grid">
+      <li *ngFor="let d of deptCards()" class="dept-row" [style.borderLeftColor]="d.color">
+        <span class="dept-name">{{ d.name }}</span>
+        <span class="dept-count">{{ d.count }}</span>
+        <span class="dept-pct">{{ d.pct }}%</span>
+      </li>
+    </ul>
+  </article>
+
+  <!-- MIDDLE ROW -->
+  <section class="middle-row">
+    <article class="panel attendance-card">
+      <header class="panel-header">
+        <h2>Attendance Overview</h2>
+      </header>
+
+      <div class="attendance-row">
+        <div *ngFor="let a of attendanceStats()" class="att-pill" [style.background]="a.bg" [style.color]="a.color">
+          <strong>{{ a.value }}</strong>
+          <span>{{ a.label }}</span>
+        </div>
+      </div>
+
+      <div class="weekly-block">
+        <span class="weekly-label">Weekly Attendance</span>
+        <div class="weekly-chart" echarts [options]="weeklyChart()" [autoResize]="true"></div>
+      </div>
+
+      <div class="att-actions">
+        <button type="button" class="btn-primary" (click)="viewFullHistory()">View Full Attendance History</button>
+        <button type="button" class="btn-primary with-icon" (click)="generateReport()">
+          <span>Generate Attendance Report</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4v12"/>
+            <path d="m6 12 6 6 6-6"/>
+            <path d="M5 20h14"/>
+          </svg>
+        </button>
+      </div>
+    </article>
+
+    <article class="panel hr-summary">
+      <header class="panel-header">
+        <h2>HR Dashboard Summary</h2>
+      </header>
+      <div class="hr-block">
+        <strong>{{ stats()?.total_employees ?? 0 }}</strong>
+        <span>Total Employees</span>
+        <p class="hr-copy">All employees across departments are tracked daily for accurate workforce metrics.</p>
+      </div>
+      <div class="hr-block">
+        <strong>{{ satisfaction() }}%</strong>
+        <span>Employee Satisfaction</span>
+        <p class="hr-copy">Average satisfaction score derived from recent engagement surveys.</p>
+      </div>
+    </article>
+
+    <article class="panel dept-distribution">
+      <header class="panel-header">
+        <h2>Department Distribution</h2>
+      </header>
+      <div class="dist-chart" echarts [options]="horizontalChart()" [autoResize]="true"></div>
+    </article>
+  </section>
+
+  <!-- BOTTOM ROW -->
+  <section class="bottom-row">
+    <article class="panel leave-balance">
+      <header class="panel-header">
+        <h2>Recent Activity</h2>
+      </header>
+      <ul class="leave-list">
+        <li *ngFor="let r of recentLogins()">
+          <span class="lv-avatar">{{ getInitials(r.full_name) }}</span>
+          <div class="lv-text">
+            <strong>{{ r.full_name }}</strong>
+            <span>{{ r.city || r.country || 'Unknown location' }}</span>
+          </div>
+          <span class="lv-time">{{ r.login_at | date:'shortTime' }}</span>
+        </li>
+        <li *ngIf="!recentLogins().length" class="empty">No recent activity yet.</li>
+      </ul>
+    </article>
+  </section>
+</main>

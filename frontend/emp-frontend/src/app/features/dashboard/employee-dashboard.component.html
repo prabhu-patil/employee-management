@@ -1,0 +1,101 @@
+<main class="emp-dash-page">
+  <header class="page-head">
+    <h1>Dashboard</h1>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <span>Home</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      <span class="current">Dashboard</span>
+    </nav>
+  </header>
+
+  <!-- KPI ROW -->
+  <section class="kpi-row">
+    <article *ngFor="let kpi of kpis" class="kpi-card" [style.background]="kpi.gradient">
+      <div class="kpi-text">
+        <span class="kpi-label">{{ kpi.label }}</span>
+        <strong class="kpi-value">{{ kpi.value }}</strong>
+        <span class="kpi-change">{{ kpi.change }}</span>
+      </div>
+      <span class="kpi-icon" [innerHTML]="getKpiIcon(kpi.icon)"></span>
+    </article>
+  </section>
+
+  <!-- MIDDLE ROW -->
+  <section class="middle-row">
+    <article class="panel weekly-panel">
+      <header class="panel-header">
+        <h2>Weekly Working Hours</h2>
+        <a class="link-action" href="javascript:void(0)">View All</a>
+      </header>
+      <div class="weekly-chart" echarts [options]="weeklyChart()" [autoResize]="true"></div>
+    </article>
+
+    <article class="panel project-panel">
+      <header class="panel-header">
+        <h2>Running Project Review</h2>
+        <button type="button" class="more-btn" aria-label="More">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
+        </button>
+      </header>
+
+      <div class="donut-wrap">
+        <div class="donut-area" echarts [options]="projectChart()" [autoResize]="true"></div>
+        <div class="donut-center">
+          <span>Total</span>
+          <strong>52%</strong>
+        </div>
+      </div>
+
+      <ul class="project-legend">
+        <li><span class="dot" style="background:#6366F1"></span>Project 1</li>
+        <li><span class="dot" style="background:#F59E0B"></span>Project 2</li>
+        <li><span class="dot" style="background:#EF4444"></span>Project 3</li>
+      </ul>
+
+      <button type="button" class="more-details">More Details</button>
+    </article>
+  </section>
+
+  <!-- BOTTOM ROW -->
+  <section class="bottom-row">
+    <article class="panel team-panel">
+      <header class="panel-header">
+        <h2>My Team</h2>
+        <a class="link-action" href="javascript:void(0)">View All</a>
+      </header>
+      <ul class="team-list">
+        <li *ngFor="let m of team">
+          <span class="team-avatar" [style.background]="m.bg" [style.color]="m.color">{{ m.initials }}</span>
+          <div class="team-text">
+            <strong>{{ m.name }}</strong>
+            <span>{{ m.role }}</span>
+          </div>
+          <span class="team-status" [class.online]="m.status === 'Online'"
+                                    [class.busy]="m.status === 'Busy'"
+                                    [class.away]="m.status === 'Away'">
+            {{ m.status }}
+          </span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="panel task-panel">
+      <header class="panel-header">
+        <h2>My Task</h2>
+        <a class="link-action" href="javascript:void(0)">View All</a>
+      </header>
+      <ul class="task-list">
+        <li *ngFor="let t of tasks">
+          <span class="task-bullet" [class.high]="t.priority === 'High'"
+                                    [class.medium]="t.priority === 'Medium'"
+                                    [class.low]="t.priority === 'Low'"></span>
+          <div class="task-text">
+            <strong>{{ t.title }}</strong>
+            <span>{{ t.project }}</span>
+          </div>
+          <span class="task-due">{{ t.due }}</span>
+        </li>
+      </ul>
+    </article>
+  </section>
+</main>

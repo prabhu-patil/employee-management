@@ -1,0 +1,19 @@
+<div class="main-layout">
+  <app-sidebar
+    [collapsed]="isSidebarCollapsed"
+    [mobileOpen]="isMobileMenuOpen"
+    (closeMobile)="toggleMobileMenu()"
+  ></app-sidebar>
+
+  <div class="content-shell">
+    <app-topbar (menuToggle)="toggleSidebar()"></app-topbar>
+
+    <main class="page-content" *ngIf="{ value: isDashboard$ | async } as dashboardState">
+      <app-dashboard *ngIf="dashboardState.value"></app-dashboard>
+
+      <div class="route-shell" [class.route-shell-hidden]="dashboardState.value">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Python
+venv/
+.venv/
+**/venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Secrets / env
+.env
+.env.*
+*.env
+!.env.example
+
+# Build output
+dist/
+build/
+**/dist/
+**/build/
+.angular/
+**/.angular/
+
+# Misc
+*.log
+.DS_Store

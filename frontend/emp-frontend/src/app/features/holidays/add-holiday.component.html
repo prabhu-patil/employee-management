@@ -1,0 +1,66 @@
+<main class="holiday-form-page">
+  <header class="page-head">
+    <h1>Add Holiday</h1>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <span>Holidays</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      <span class="current">Add Holiday</span>
+    </nav>
+  </header>
+
+  <article class="panel">
+    <header class="panel-header">
+      <h2>New Holiday</h2>
+    </header>
+
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <label class="field">
+        <span class="field-label">Holiday No<em>*</em></span>
+        <input type="text" formControlName="holidayNo" placeholder="Holiday No*" />
+        <small class="error" *ngIf="hasError('holidayNo')">Holiday No is required.</small>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Holiday Name<em>*</em></span>
+        <input type="text" formControlName="name" placeholder="Holiday Name*" />
+        <small class="error" *ngIf="hasError('name')">Holiday Name is required.</small>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Holiday Date<em>*</em></span>
+        <input type="date" formControlName="date" placeholder="Holiday Date*" />
+        <small class="error" *ngIf="hasError('date')">Holiday Date is required.</small>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Location<em>*</em></span>
+        <input type="text" formControlName="location" placeholder="Location*" />
+        <small class="error" *ngIf="hasError('location')">Location is required.</small>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Shift<em>*</em></span>
+        <select formControlName="shift">
+          <option value="" disabled>Select shift</option>
+          <option value="All Shifts">All Shifts</option>
+          <option value="Day Shift">Day Shift</option>
+          <option value="Night Shifts">Night Shifts</option>
+        </select>
+        <small class="error" *ngIf="hasError('shift')">Shift is required.</small>
+      </label>
+
+      <label class="field full">
+        <span class="field-label">Details<em>*</em></span>
+        <textarea rows="4" formControlName="details" placeholder="Details*"></textarea>
+        <small class="error" *ngIf="hasError('details')">Details are required.</small>
+      </label>
+
+      <small class="error" *ngIf="errorMessage">{{ errorMessage }}</small>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit" [disabled]="saving">{{ saving ? 'Saving…' : 'Submit' }}</button>
+        <button type="button" class="btn-cancel" (click)="cancel()" [disabled]="saving">Cancel</button>
+      </div>
+    </form>
+  </article>
+</main>

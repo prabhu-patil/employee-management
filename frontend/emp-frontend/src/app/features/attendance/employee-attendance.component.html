@@ -1,0 +1,201 @@
+<main class="emp-att-page">
+  <header class="page-head">
+    <h1>Employee Attendance</h1>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <span>Attendance</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      <span class="current">Employee Attendance</span>
+    </nav>
+  </header>
+
+  <button type="button" class="back-arrow" aria-label="Back to employee list" (click)="goBack()">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    <span>Back</span>
+  </button>
+
+  <div *ngIf="usingSampleData()" class="sample-banner">
+    Showing sample data — this employee has no recorded attendance yet.
+  </div>
+
+  <!-- Profile + tiles in one card -->
+  <article class="panel summary-card">
+    <div class="profile">
+      <div class="avatar" [class.has-image]="!!profile.avatarUrl">
+        <img *ngIf="profile.avatarUrl" [src]="profile.avatarUrl" [alt]="profile.name" />
+        <span *ngIf="!profile.avatarUrl">{{ getInitials(profile.name) }}</span>
+      </div>
+      <div class="profile-text">
+        <strong>{{ profile.name }}</strong>
+        <span class="title">{{ profile.title }}</span>
+        <ul class="meta">
+          <li><em>ID</em> {{ profile.employeeId }}</li>
+          <li><em>Dept.</em> {{ profile.department }}</li>
+          <li><em>Joined</em> {{ profile.joined }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <ul class="tile-row">
+      <li *ngFor="let tile of tiles" class="tile">
+        <div class="tile-text">
+          <span>{{ tile.label }}</span>
+          <strong>{{ tile.value }}</strong>
+        </div>
+        <span class="tile-icon" [style.background]="tile.bg" [style.color]="tile.color"
+              [innerHTML]="getTileIcon(tile.icon)"></span>
+      </li>
+    </ul>
+  </article>
+
+  <!-- Tabs + table -->
+  <article class="panel">
+    <div class="tabs">
+      <button type="button" class="tab" [class.active]="tab() === 'today'" (click)="setTab('today')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span>Today</span>
+      </button>
+      <button type="button" class="tab" [class.active]="tab() === 'summary'" (click)="setTab('summary')">
+        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
+        <span>Summary</span>
+      </button>
+      <button type="button" class="tab" [class.active]="tab() === 'log'" (click)="setTab('log')">
+        <svg viewBox="0 0 24 24"><path d="M3 5h18v4H3zM3 11h18v4H3zM3 17h18v4H3z"/></svg>
+        <span>Attendance Log</span>
+      </button>
+      <button type="button" class="tab" [class.active]="tab() === 'analytics'" (click)="setTab('analytics')">
+        <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5M12 16V8M16 16v-3"/></svg>
+        <span>Analytics</span>
+      </button>
+    </div>
+
+    <div *ngIf="tab() === 'today'" class="today-panel">
+      <ng-container *ngIf="todayRow; else noToday">
+        <div class="today-grid">
+          <div class="today-card">
+            <span class="lbl">Date</span>
+            <strong>{{ todayRow.date }}</strong>
+          </div>
+          <div class="today-card">
+            <span class="lbl">Check In</span>
+            <strong>{{ todayRow.checkIn }}</strong>
+          </div>
+          <div class="today-card">
+            <span class="lbl">Check Out</span>
+            <strong>{{ todayRow.checkOut }}</strong>
+          </div>
+          <div class="today-card">
+            <span class="lbl">Working Hours</span>
+            <strong>{{ todayRow.workingHours }}</strong>
+          </div>
+          <div class="today-card">
+            <span class="lbl">Shift</span>
+            <strong>{{ todayRow.shift }}</strong>
+          </div>
+          <div class="today-card">
+            <span class="lbl">Status</span>
+            <span class="status-pill"
+                  [class.present]="todayRow.status === 'Present'"
+                  [class.leave]="todayRow.status === 'Leave'"
+                  [class.late]="todayRow.status === 'Late'"
+                  [class.half]="todayRow.status === 'Half Day'">
+              {{ todayRow.status }}
+            </span>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noToday>
+        <div class="empty-today">No attendance record for today.</div>
+      </ng-template>
+    </div>
+
+    <div *ngIf="tab() === 'summary'" class="summary-panel">
+      <div class="summary-tiles">
+        <article class="summary-tile" data-tone="present">
+          <span>Present</span><strong>{{ summaryStats.present }}</strong>
+        </article>
+        <article class="summary-tile" data-tone="late">
+          <span>Late</span><strong>{{ summaryStats.late }}</strong>
+        </article>
+        <article class="summary-tile" data-tone="half">
+          <span>Half Day</span><strong>{{ summaryStats.half }}</strong>
+        </article>
+        <article class="summary-tile" data-tone="wfh">
+          <span>WFH</span><strong>{{ summaryStats.wfh }}</strong>
+        </article>
+        <article class="summary-tile" data-tone="leave">
+          <span>On Leave</span><strong>{{ summaryStats.leave }}</strong>
+        </article>
+        <article class="summary-tile" data-tone="absent">
+          <span>Absent</span><strong>{{ summaryStats.absent }}</strong>
+        </article>
+        <article class="summary-tile" data-tone="hours">
+          <span>Total Hours</span><strong>{{ summaryStats.totalHours }}</strong>
+        </article>
+        <article class="summary-tile" data-tone="avg">
+          <span>Avg / Day</span><strong>{{ summaryStats.avgHours }}</strong>
+        </article>
+      </div>
+    </div>
+
+
+    <div *ngIf="tab() === 'log'" class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>CHECK IN</th>
+            <th>CHECK OUT</th>
+            <th>WORKING HOURS</th>
+            <th>SHIFT</th>
+            <th>STATUS</th>
+            <th class="actions-cell">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows">
+            <td>{{ row.date }}</td>
+            <td>{{ row.checkIn }}</td>
+            <td>{{ row.checkOut }}</td>
+            <td>{{ row.workingHours }}</td>
+            <td>{{ row.shift }}</td>
+            <td>
+              <span class="status-pill"
+                    [class.present]="row.status === 'Present'"
+                    [class.leave]="row.status === 'Leave'"
+                    [class.late]="row.status === 'Late'"
+                    [class.half]="row.status === 'Half Day'">
+                {{ row.status }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button type="button" class="row-action delete" aria-label="Delete" title="Delete">
+                <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="tab() === 'analytics'" class="analytics-grid">
+      <section class="analytics-card">
+        <header class="analytics-head">
+          <h3>Attendance Distribution</h3>
+        </header>
+        <div class="distribution-chart" echarts [options]="distributionChart" [autoResize]="true"></div>
+      </section>
+
+      <section class="analytics-card">
+        <header class="analytics-head">
+          <h3>Status Overview</h3>
+        </header>
+        <ul class="ring-grid">
+          <li *ngFor="let ring of statusRings" class="ring-cell">
+            <div class="ring-chart" echarts [options]="ringOption(ring.value, ring.color)" [autoResize]="true"></div>
+            <span class="ring-label">{{ ring.label }}</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </article>
+</main>

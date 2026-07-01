@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"Health: %{http_code}\\\\nDocs: %{http_code}\\\\n\" http://localhost:8000/api/health)",
+      "Bash(curl -s http://localhost:8000/api/health)",
+      "Bash(curl -s -o /dev/null -w \"Docs: %{http_code}\\\\n\" http://localhost:8000/api/docs)",
+      "Bash(docker compose *)",
+      "Bash(npx ng *)",
+      "Bash(CI=1 npx --yes ng version)",
+      "Bash(./node_modules/.bin/ng serve *)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(disown)",
+      "Read(//tmp/**)",
+      "Bash(./node_modules/.bin/ng build *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(node -e \"console.log\\('node works'\\); console.log\\(process.version\\)\")",
+      "Bash(node ./node_modules/@angular/cli/bin/ng.js build)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 3 http://localhost:8000/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 3 http://localhost:8000/docs)",
+      "Bash(curl -s -o /dev/null -w \"/api/health: HTTP %{http_code}\\\\n\" --max-time 3 http://localhost:8000/api/health)",
+      "Bash(curl -s -o /dev/null -w \"/api/docs: HTTP %{http_code}\\\\n\" --max-time 3 http://localhost:8000/api/docs)",
+      "Bash(xargs -I{} head -30 {})",
+      "Bash(grep -l \"Employee Summary\" *.js)",
+      "Bash(grep -l \"AGENT LABS\" *.js)",
+      "Bash(grep -l \"HR Dashboard Summary\" *.js)",
+      "Bash(grep -l \"Attendance Overview\" *.js)",
+      "Bash(grep -l \"4A2D5F\\\\|#4A2D5F\" *.js *.css)",
+      "WebFetch(domain:www.einfosoft.com)",
+      "Bash(curl -sL \"https://www.einfosoft.com/templates/admin/kuber/source/light/\")",
+      "Bash(echo \"BUILD EXIT: $?\")",
+      "Bash(docker exec *)",
+      "Bash(docker cp *)"
+    ]
+  }
+}

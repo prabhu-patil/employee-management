@@ -1,0 +1,13 @@
+<div class="flex h-screen overflow-hidden bg-dark-bg">
+  <app-sidebar [collapsed]="isSidebarCollapsed" [mobileOpen]="isMobileMenuOpen"></app-sidebar>
+
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <app-topbar (menuToggle)="toggleMobileMenu()"></app-topbar>
+
+    <main class="flex-1 overflow-y-auto p-6">
+      <div class="route-shell" [@routeAnimations]="getRouteState(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>
